@@ -42,5 +42,3 @@ class BrotherModelSpider(scrapy.Spider):
 
         #Save Excel
         wb.save(excelFile)
-
-        print(xw.Book(excelFile).sheets['BrotherModels'].range('A1:A' + str(xw.Book(excelFile).sheets['BrotherModels'].range('A1').end('down').row)).value)

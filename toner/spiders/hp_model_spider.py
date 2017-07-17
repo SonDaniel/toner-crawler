@@ -20,12 +20,13 @@ class HPModelSpider(scrapy.Spider):
 
         # For excel
         wb = None
+        sht = None
         excelFile = 'HP.xlsx'
         if Path(excelFile).exists():
             wb = xw.Book(excelFile)
         else:
             wb = xw.Book()
-        sht = wb.sheets.add(name='HP Models')
+        sht = wb.sheets['HP Models']
 
         n = 1
         with open(filename, 'w') as f:
