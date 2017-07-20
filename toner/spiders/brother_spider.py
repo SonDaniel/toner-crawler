@@ -28,17 +28,17 @@ class BrotherSpider(scrapy.Spider):
         else:
             self.wb = xw.Book()
             
-        self.sht = wb.sheets["BrotherToners"]
-
-        # Counter for row
-        self.n = 1
+        self.sh = self.wb.sheets["BrotherToners"]
 
         for toner in response.css('div.ListLeft'):
-            self.sht.range('A'+ str(self.n)).value = model_name
-            yield scrapy.Request(url= toner.css('h2.product-name a::attr(href)'), self.parse_details)
+            self.sh.range('A'+ str(self.n)).value = model_name
+            yield scrapy.Request(url=toner.css('h2.product-name a::attr(href)').extract_first(), callback=self.parse_details)
+        
+        self.wb.save(excelFile)
     
     def parse_details(self, response):
         regex = re.compile(r'[\n\r\t]')
-        self.sh.range('B' + self.n).value = response.css('div.product-name h1::text').extract_first()
-        self.sh.range('C' + self.n).value = response.css('div.long-description div.std::text').extract_first()
-        self.sh.range('D' + self.n).value = regex.sub(" ",response.css('div.price-box p.old-price span.price::text').extract_first())
+        self.sh.range('B' + str(self.n)).value = response.css('div.product-name h1::text').extract_first()
+        self.sh.range('C' + str(self.n)).value = response.css('div.long-description div.std::text').extract_first()
+        self.sh.range('D' + str(self.n)).value = regex.sub(" ",response.css('div.price-box p.old-price span.price::text').extract_first())
+        self.n += 1
