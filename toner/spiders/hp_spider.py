@@ -4,14 +4,14 @@ import xlwings as xw
 import re
 
 class BrotherSpider(scrapy.Spider):
-    name = "brother_toner"
+    name = "hp_toner"
     n = 2
     wb = None
     sh = None
 
     def start_requests(self):
-        last_row = str(xw.Book('Brother.xlsx').sheets['BrotherModels'].range('A1').end('down').row)
-        urls = xw.Book('Brother.xlsx').sheets['BrotherModels'].range('B1:B' + last_row).value
+        last_row = str(xw.Book('HP.xlsx').sheets['HP Models'].range('A1').end('down').row)
+        urls = xw.Book('HP.xlsx').sheets['HP Models'].range('B1:B' + last_row).value
 
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
@@ -21,16 +21,16 @@ class BrotherSpider(scrapy.Spider):
 
         # For excel
         self.wb = None
-        excelFile = 'Brother.xlsx'
+        excelFile = 'HP.xlsx'
         if Path(excelFile).exists():
             self.wb = xw.Book(excelFile)
         else:
             self.wb = xw.Book()
 
-        self.sh = self.wb.sheets["BrotherToners"]
+        self.sh = self.wb.sheets["HP Toners"]
 
         # setting up headers
-        self.sh.range('A1').value = 'Brother Model'
+        self.sh.range('A1').value = 'HP Model'
         self.sh.range('B1').value = 'Toner Title'
         self.sh.range('C1').value = 'Description'
         self.sh.range('D1').value = 'Price'
